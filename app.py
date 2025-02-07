@@ -83,3 +83,6 @@ def convert_ipynb_to_pdf():
     except Exception as e:
         logger.error(f"Server error: {str(e)}")
         return jsonify({"error": "Server error", "details": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
