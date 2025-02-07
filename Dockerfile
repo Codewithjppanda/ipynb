@@ -10,9 +10,6 @@ WORKDIR /app
 # Add PATH environment variable
 ENV PATH="/opt/conda/bin:$PATH"
 
-# Debug: Print NB_USER
-RUN echo "NB_USER is set to $NB_USER"
-
 # Install required packages and dependencies
 RUN conda install -y flask flask-cors werkzeug jupyter nbconvert && \
     apt-get update && \
@@ -43,5 +40,5 @@ USER jovyan
 # Expose the port
 EXPOSE 5000
 
-# Run the Flask app
-CMD ["python", "app.py", "--host=0.0.0.0", "--port=5000"]
+# Run the Flask app directly without shell
+CMD ["python3", "-u", "app.py", "--host=0.0.0.0", "--port=5000"]

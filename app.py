@@ -52,6 +52,7 @@ def convert_ipynb_to_pdf():
                 "jupyter-nbconvert",
                 "--to", "pdf",
                 "--TemplateExporter.exclude_input=False",
+                "--template", "custom_color.tplx",
                 "--no-input",
                 file_path,
                 "--output-dir", app.config['OUTPUT_FOLDER']

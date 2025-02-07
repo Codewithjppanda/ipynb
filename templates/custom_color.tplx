@@ -1,0 +1,7 @@
+((* block docclass *))
+\documentclass[11pt]{article}
+\usepackage{xcolor}
+\usepackage{minted}
+((* endblock docclass *))
+
+((* extends 'article.tplx' *)) 
