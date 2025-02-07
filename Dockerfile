@@ -15,10 +15,9 @@ RUN conda install -y flask flask-cors werkzeug jupyter nbconvert && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
     pandoc \
+    texlive-base \
     texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-plain-generic \
-    texlive-latex-extra && \
+    texlive-latex-recommended && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

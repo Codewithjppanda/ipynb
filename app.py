@@ -52,11 +52,11 @@ def convert_ipynb_to_pdf():
                 "jupyter-nbconvert",
                 "--to", "pdf",
                 "--TemplateExporter.exclude_input=False",
-                "--template", "custom_color.tplx",
+                "--template-file", "/app/templates/custom_color.tplx",
                 "--no-input",
                 file_path,
                 "--output-dir", app.config['OUTPUT_FOLDER']
-            ], check=True, capture_output=True, text=True)
+            ], check=True, capture_output=True, text=True, timeout=300)
             
             logger.info("Conversion completed successfully")
             logger.info(result.stdout)
@@ -81,9 +81,19 @@ def convert_ipynb_to_pdf():
                 "stderr": e.stderr
             }), 500
         
+        except subprocess.TimeoutExpired as e:
+            logger.error(f"Conversion timed out after 5 minutes")
+            return jsonify({
+                "error": "Conversion timed out",
+                "details": "PDF generation took too long"
+            }), 500
+        
     except Exception as e:
         logger.error(f"Server error: {str(e)}")
         return jsonify({"error": "Server error", "details": str(e)}), 500
+
+logger.info(f"Full nbconvert path: {subprocess.getoutput('which jupyter-nbconvert')}")
+logger.info(f"Template exists: {os.path.exists('/app/templates/custom_color.tplx')}")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
