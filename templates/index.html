@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jupyter Notebook to PDF Converter</title>
+    <style>
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Upload a Jupyter Notebook</h2>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" accept=".ipynb" required>
+        <button type="submit">Convert to PDF</button>
+    </form>
+    <p id="status"></p>
+    <p id="details" class="error"></p>
+
+    <script>
+        document.getElementById("uploadForm").onsubmit = async function (event) {
+            event.preventDefault();
+            document.getElementById("status").textContent = "Converting...";
+            document.getElementById("details").textContent = "";
+            
+            let fileInput = document.getElementById("fileInput").files[0];
+            let formData = new FormData();
+            formData.append("file", fileInput);
+
+            try {
+                let response = await fetch("/convert", { method: "POST", body: formData });
+                if (response.ok) {
+                    let blob = await response.blob();
+                    let link = document.createElement("a");
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "converted.pdf";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    document.getElementById("status").className = "success";
+                    document.getElementById("status").textContent = "Download Ready!";
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById("status").className = "error";
+                    document.getElementById("status").textContent = `Conversion Failed: ${errorData.error}`;
+                    if (errorData.details) {
+                        document.getElementById("details").textContent = `Details: ${errorData.details}`;
+                    }
+                }
+            } catch (error) {
+                document.getElementById("status").className = "error";
+                document.getElementById("status").textContent = "Network or server error occurred";
+                document.getElementById("details").textContent = `Details: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: jupyter-pdf-converter
+    runtime: docker
+    plan: free
+    region: frankfurt # or oregon
+    envVars:
+      - key: UPLOAD_FOLDER
+        value: /app/uploads
+      - key: OUTPUT_FOLDER
+        value: /app/outputs
